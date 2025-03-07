@@ -1,6 +1,7 @@
 import DateTimePicker, {DateType, getDefaultStyles} from 'react-native-ui-datepicker';
-import {View} from "react-native";
+import {TouchableWithoutFeedback, useColorScheme, View} from "react-native";
 import {calendarStyles} from "@/components/Calendar/styles/calendarStyles";
+import {APODstyles} from "@/components/AstronomicPictureOfTheDay/styles/APODstyles";
 
 interface CalendarProps {
     Day: string,
@@ -10,8 +11,18 @@ interface CalendarProps {
 
 export default function CalendarScreen(props: CalendarProps) {
     const defaultStyles = getDefaultStyles();
+    const colorScheme = useColorScheme();
+    const themeCalendar =
+        colorScheme === 'light' ? APODstyles.childColorLight : APODstyles.childColorDark;
+
+
     return (
-        <View style={calendarStyles.container}>
+        <TouchableWithoutFeedback onPress={()=>{props.closeScreen(false)}}>
+
+        <View  style={calendarStyles.container}>
+
+            <View style={[themeCalendar,calendarStyles.mainCalendar]}>
+
             <DateTimePicker
                 mode="single"
                 date={props.Day}
@@ -23,11 +34,13 @@ export default function CalendarScreen(props: CalendarProps) {
                 }}
                 styles={{
                     ...defaultStyles,
-                    selected: {backgroundColor: 'blue'},
                 }}
             />
 
+            </View>
+
         </View>
+        </TouchableWithoutFeedback>
 
     )
 

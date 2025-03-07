@@ -1,4 +1,4 @@
-import {Image, ScrollView, Text, TouchableOpacity, useColorScheme, View} from "react-native";
+import {Image, Linking, ScrollView, Text, TouchableOpacity, useColorScheme, View} from "react-native";
 import {useEffect, useState} from "react";
 import {LoadingStateType} from "@/types/LoadingStateType";
 import {APODData, getAPOD} from "@/components/AstronomicPictureOfTheDay/api/AstonomicPictureOfTheDayRequest";
@@ -21,6 +21,8 @@ export default function Apod() {
     const themeContainerStyle =
         colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
 
+    const themeChildContainerStyle =
+        colorScheme === 'light' ? APODstyles.childColorLight : APODstyles.childColorDark;
 
     const calendarDateToString=(date:DateType)=>{
         if (date) {
@@ -42,17 +44,28 @@ export default function Apod() {
     }, [APODDay])
 
     return (
-        <View style={[themeContainerStyle, APODstyles.container]}>
-            <Text style={themeTextStyle}>{APODTexts.title} <TouchableOpacity onPress={()=>{setCalendarVisible(true)}}><Text style={themeTextStyle}>{APODDay}</Text></TouchableOpacity></Text>
-            {loadingState === "Loaded" && APOD ?
-                <ScrollView>
+        <ScrollView style={[themeContainerStyle, APODstyles.container]}>
+
+            <View style={APODstyles.titleView}>
+
+
+            <Text style={[themeTextStyle,APODstyles.titleText]}>{APODTexts.title}</Text>
+
+
+                <TouchableOpacity style={[APODstyles.chosenDate,themeChildContainerStyle]} onPress={()=>{setCalendarVisible(true)}}>
+                    <Text style={themeTextStyle}>{APODDay}</Text>
+                </TouchableOpacity>
+
+            </View>
+            {isCalendarVisible&&<CalendarScreen Day={APODDay} returnDate={calendarDateToString} closeScreen={setCalendarVisible}/>}
+            {loadingState === "Loaded" && APOD && APOD.media_type==="image" ?
+                <>
                     <Text style={themeTextStyle}>
                         {APOD.title}
                     </Text>
 
 
 
-                    {isCalendarVisible&&<CalendarScreen Day={APODDay} returnDate={calendarDateToString} closeScreen={setCalendarVisible}/>}
 
                     <Image
                         style={APODstyles.pictureOfTheDay}
@@ -61,13 +74,26 @@ export default function Apod() {
                             uri: APOD.url,
                         }}
                     />
-                    <Text style={themeTextStyle}>{APOD.copyright}</Text>
-                    <Text style={themeTextStyle}>
+
+                    {APOD.copyright&& <Text style={[themeTextStyle,APODstyles.credentialsText]}>Credentials: {APOD.copyright}</Text>}
+
+                    <View style={[themeChildContainerStyle,APODstyles.pictureExplanationView]}>
+
+                    <Text style={[themeTextStyle,APODstyles.pictureExplanation]}>
                         {APOD.explanation}
                     </Text>
-                </ScrollView>
-                : <Text style={themeTextStyle}>{loadingState}</Text>}
-        </View>
+                    </View>
+
+                </>
+                :
+                loadingState === "Loaded"&&APOD ? <Text style={themeTextStyle}>Wrong file format to see check:
+                    <Text   onPress={() => {
+                        Linking.openURL(APOD.url)}}>{APOD.url}</Text>
+                    </Text>  :<Text style={themeTextStyle}>{loadingState}</Text>
+
+
+            }
+        </ScrollView>
     );
 }
 
