@@ -24,7 +24,6 @@ export const getAPOD=async (picDate:string ,setLoadingState:(state:LoadingStateT
             setLoadingState("Failed")
         }
         setLoadingState("Loaded")
-        console.log(response)
         return await response.json();
     } catch (err) {
         setLoadingState("Failed")

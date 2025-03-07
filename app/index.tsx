@@ -1,72 +1,31 @@
-import {Image, ScrollView, Text, TouchableOpacity, useColorScheme, View} from "react-native";
-import {useEffect, useState} from "react";
-import {LoadingStateType} from "@/types/LoadingStateType";
-import {APODData, getAPOD} from "@/components/AstronomicPictureOfTheDay/api/AstonomicPictureOfTheDayRequest";
-import {handleDate} from "@/functions/handleDate";
-import {APODTexts} from "@/components/AstronomicPictureOfTheDay/texts/APODTexts";
-import {APODstyles} from "@/components/AstronomicPictureOfTheDay/styles/APODstyles";
-import {DateType} from 'react-native-ui-datepicker';
-import CalendarScreen from "@/components/Calendar/calendarScreen";
+import React from "react";
+import {ImageBackground, Text, useColorScheme, View} from "react-native";
+import {Link} from "expo-router";
+import {menuElements} from "@/components/Index/texts/IndexTexts";
+import {indexStyles} from "@/components/Index/styles/indexStyles";
+import {globalStyles} from "@/globalStyles/globalStyles";
 
 export default function Index() {
-    const [loadingState, setLoadingState] = useState<LoadingStateType>("Loading");
-    const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
-    const [APOD, setAPOD] = useState<APODData>();
-    const [APODDay, setAPODDay] = useState<string>(handleDate(new Date()));
     const colorScheme = useColorScheme();
+    const lightBackground = require('@/assets/images/lightBackground.png')
+    const darkBackground = require('@/assets/images/darkBackgorund.png')
+    const themeBackgroundImage = colorScheme === 'light' ? lightBackground : darkBackground
     const themeTextStyle =
-        colorScheme === 'light' ? APODstyles.lightText : APODstyles.darkText;
-
-    const themeContainerStyle =
-        colorScheme === 'light' ? APODstyles.lightContainer : APODstyles.darkContainer;
-
-
-    const calendarDateToString=(date:DateType)=>{
-        if (date) {
-            const parts = date.toLocaleString().split(", ")[0].split(".");
-            const year = parts[2];
-            const month = parts[1].padStart(2, '0');
-            const day = parts[0].padStart(2, '0');
-            const dateString = `${year}-${month}-${day}`;
-            setAPODDay(dateString)
-        }
-
-    }
-
-    useEffect(() => {
-        setLoadingState("Loading")
-        getAPOD(APODDay, setLoadingState).then(res => {
-            setAPOD(res)
-        })
-    }, [APODDay])
+        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
+    const themeBackgroundStyle =
+        colorScheme === 'light' ? indexStyles.lightMenuElem : indexStyles.darkMenuElem;
 
     return (
-        <View style={[themeContainerStyle, APODstyles.container]}>
-            <Text style={themeTextStyle}>{APODTexts.title} <TouchableOpacity onPress={()=>{setCalendarVisible(true)}}><Text style={themeTextStyle}>{APODDay}</Text></TouchableOpacity></Text>
-            {loadingState === "Loaded" && APOD ?
-                <ScrollView>
-                    <Text>
-                        {APOD.title}
-                    </Text>
-
-
-
-                    {isCalendarVisible&&<CalendarScreen Day={APODDay} returnDate={calendarDateToString} closeScreen={setCalendarVisible}/>}
-
-                    <Image
-                        style={APODstyles.pictureOfTheDay}
-                        resizeMode={"cover"}
-                        source={{
-                            uri: APOD.url,
-                        }}
-                    />
-                    <Text style={themeTextStyle}>{APOD.copyright}</Text>
-                    <Text style={themeTextStyle}>
-                        {APOD.explanation}
-                    </Text>
-                </ScrollView>
-                : <Text style={themeTextStyle}>{loadingState}</Text>}
+        <View style={indexStyles.container}>
+            <ImageBackground source={themeBackgroundImage} resizeMode={"cover"} style={indexStyles.image}>
+                {menuElements.map((elem, index) => (
+                    <View style={[indexStyles.menuElem, themeBackgroundStyle]} key={index}>
+                        <Link href={elem.href}>
+                            <Text style={themeTextStyle}>{elem.title}</Text>
+                        </Link>
+                    </View>
+                ))}
+            </ImageBackground>
         </View>
     );
 }
-
