@@ -11,19 +11,18 @@ export const indexStyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: 'center',
     },
-    link:{
-        width: "100%",
+
+    menuElemLLink:{
+        margin:10,
+        width:"80%",
     },
-    menuElem:{
-        display: "flex",
-        alignItems: "center",
-        justifyContent: 'center',
-        width: "80%",
-        height:60,
-        padding:5,
-        opacity:0.8,
+    menuElemView:{
         borderRadius:15,
-        margin:5
+        justifyContent: "center",
+        alignItems: "center",
+        width: "100%",
+        height:60,
+        opacity:0.9,
     },
     lightMenuElem:{
         backgroundColor:lightThemeColor

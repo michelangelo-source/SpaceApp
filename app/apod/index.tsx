@@ -26,12 +26,20 @@ export default function Apod() {
 
     const calendarDateToString=(date:DateType)=>{
         if (date) {
-            const parts = date.toLocaleString().split(", ")[0].split(".");
-            const year = parts[2];
-            const month = parts[1].padStart(2, '0');
-            const day = parts[0].padStart(2, '0');
-            const dateString = `${year}-${month}-${day}`;
-            setAPODDay(dateString)
+            if(date instanceof Date){
+
+                const year = date.getUTCFullYear();
+                const month = date.getUTCMonth() + 1;
+                let day = date.getUTCDate();
+                if(date.getTimezoneOffset()!==0){
+                    day++;
+                }
+                const formattedMonth = month.toString().padStart(2, '0');
+                const formattedDay = day.toString().padStart(2, '0');
+                const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
+                setAPODDay(formattedDate);
+            }
+
         }
 
     }

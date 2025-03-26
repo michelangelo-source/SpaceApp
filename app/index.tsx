@@ -18,13 +18,15 @@ export default function Index() {
     return (
         <View style={indexStyles.container}>
             <ImageBackground source={themeBackgroundImage} resizeMode={"cover"} style={indexStyles.image}>
-                {menuElements.map((elem, index) => (
-                    <View style={[indexStyles.menuElem, themeBackgroundStyle]} key={index}>
-                        <Link href={elem.href}>
-                            <Text style={themeTextStyle}>{elem.title}</Text>
+
+                    {menuElements.map((elem, index) => (
+                        <Link href={elem.href} key={index} style={indexStyles.menuElemLLink}>
+                            <View style={[indexStyles.menuElemView, themeBackgroundStyle]}>
+                                <Text style={themeTextStyle}>{elem.title}</Text>
+                            </View>
                         </Link>
-                    </View>
-                ))}
+                    ))}
+
             </ImageBackground>
         </View>
     );
