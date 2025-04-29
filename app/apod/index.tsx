@@ -5,7 +5,6 @@ import {APODData, getAPOD} from "@/components/AstronomicPictureOfTheDay/api/Asto
 import {handleDate} from "@/functions/handleDate";
 import {APODTexts} from "@/components/AstronomicPictureOfTheDay/texts/APODTexts";
 import {APODstyles} from "@/components/AstronomicPictureOfTheDay/styles/APODstyles";
-import {DateType} from 'react-native-ui-datepicker';
 import CalendarScreen from "@/components/Calendar/calendarScreen";
 import {globalStyles} from "@/globalStyles/globalStyles";
 
@@ -24,25 +23,6 @@ export default function Apod() {
     const themeChildContainerStyle =
         colorScheme === 'light' ? APODstyles.childColorLight : APODstyles.childColorDark;
 
-    const calendarDateToString=(date:DateType)=>{
-        if (date) {
-            if(date instanceof Date){
-
-                const year = date.getUTCFullYear();
-                const month = date.getUTCMonth() + 1;
-                let day = date.getUTCDate();
-                if(date.getTimezoneOffset()!==0){
-                    day++;
-                }
-                const formattedMonth = month.toString().padStart(2, '0');
-                const formattedDay = day.toString().padStart(2, '0');
-                const formattedDate = `${year}-${formattedMonth}-${formattedDay}`;
-                setAPODDay(formattedDate);
-            }
-
-        }
-
-    }
 
     useEffect(() => {
         setLoadingState("Loading")
@@ -65,7 +45,7 @@ export default function Apod() {
                 </TouchableOpacity>
 
             </View>
-            {isCalendarVisible&&<CalendarScreen Day={APODDay} returnDate={calendarDateToString} closeScreen={setCalendarVisible}/>}
+            {isCalendarVisible&&<CalendarScreen Day={APODDay} returnDate={setAPODDay} closeScreen={setCalendarVisible} minDate={new Date(1995, 5, 16)}/>}
             {loadingState === "Loaded" && APOD && APOD.media_type==="image" ?
                 <>
                     <Text style={themeTextStyle}>
