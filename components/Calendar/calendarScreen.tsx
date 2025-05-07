@@ -5,9 +5,10 @@ import {globalStyles} from "@/globalStyles/globalStyles";
 
 interface CalendarProps {
     Day: string,
-    returnDate: (date: string) => void
+    returnDate: (date: string) => void,
     closeScreen: (close: boolean) => void,
-    enableDates?: DateType[]
+    enableDates?: DateType[],
+    disabledDates?: DateType[],
     minDate?: Date,
     maxDate?: Date
 }
@@ -53,6 +54,7 @@ export default function CalendarScreen(props: CalendarProps) {
                             props.closeScreen(false)
                         }}
                         enabledDates={props.enableDates}
+                        disabledDates={props.disabledDates}
                         styles={{
                             ...defaultStyles,
                         }}
