@@ -21,7 +21,7 @@ export default function Apod() {
         colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
 
     const themeChildContainerStyle =
-        colorScheme === 'light' ? APODstyles.childColorLight : APODstyles.childColorDark;
+        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
 
 
     useEffect(() => {

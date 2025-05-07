@@ -21,8 +21,8 @@ export const calendarStyles = StyleSheet.create({
     mainCalendar: {
         borderWidth: 1,
         padding: 10,
-        height: "45%",
-        width: "80%",
+        height: 400,
+        width: 270,
         borderRadius: 5,
         justifyContent: "center",
         alignItems: "center",

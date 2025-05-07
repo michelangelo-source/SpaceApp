@@ -1,10 +1,13 @@
-import {Image, Text, TouchableOpacity, View} from "react-native";
+import {FlatList, Image, Text, TouchableOpacity, useColorScheme, View} from "react-native";
 import {useEffect, useState} from "react";
 import {getManifest, RoverManifest} from "@/components/MarsRoverPhotos/api/manifest";
 import {LoadingStateType} from "@/types/LoadingStateType";
 import CalendarScreen from "@/components/Calendar/calendarScreen";
 import {DateType} from "react-native-ui-datepicker";
-import {getPhotosByEarthDate, photosByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
+import {getPhotosByEarthDate, photosByEarthDateArr} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
+import {globalStyles} from "@/globalStyles/globalStyles";
+import {marsStyles} from "@/components/MarsRoverPhotos/styles/MarsStyles";
+import {MarsTexts} from "@/components/MarsRoverPhotos/texts/MarsTexts";
 
 export default function Mars() {
     const [data, setData] = useState<RoverManifest>();
@@ -12,7 +15,19 @@ export default function Mars() {
     const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [enabledDates, setEnabledDates] = useState<DateType[]>();
-    const [currPhotos, setCurrPhotos] = useState<photosByEarthDate>();
+    const [currPhotos, setCurrPhotos] = useState<photosByEarthDateArr>();
+
+    const colorScheme = useColorScheme();
+    const themeTextStyle =
+        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
+
+    const themeContainerStyle =
+        colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
+
+    const themeChildContainerStyle =
+        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
+
+
     useEffect(() => {
         setLoadingState("Loading")
         getManifest(setLoadingState).then(res => {
@@ -31,38 +46,53 @@ export default function Mars() {
         })
     }, [currentDate]);
 
-    return (<View style={{flex: 1}}>
+
+    return (<View style={[themeContainerStyle, marsStyles.container]}>
         {loadingState === "Loaded" && currentDate && data &&
             <>
-
+                <Text  style={[themeTextStyle,marsStyles.title]}>{MarsTexts.title}</Text>
                 <TouchableOpacity onPress={() => {
                     setCalendarVisible(true)
-                }}>
-                    <Text>
+                }}
+                style={[themeChildContainerStyle,marsStyles.dateBtn]}
+                >
+                    <Text style={[themeTextStyle]}>
                         {currentDate}
                     </Text>
                 </TouchableOpacity>
 
-                {currPhotos && currPhotos.photos.map((photo) => (
-                    <Image
-                        key={photo.id}
-                        style={{
-                            width: "100%",
-                            height: 300,
-                            borderRadius: 5
-                        }}
-                        resizeMode={"cover"}
-                        source={{
-                            uri: photo.img_src,
-                        }}
+
+                {currPhotos &&
+                    <FlatList
+                        style={marsStyles.photoListStyle}
+                        data={currPhotos.photos}
+                        renderItem={({item}) =>
+                            <View style={marsStyles.photoView}>
+
+                                <Image
+                                    key={item.id}
+                                    style={marsStyles.photoImg}
+                                    resizeMode={"cover"}
+                                    source={{
+                                        uri: item.img_src,
+                                    }}
+                                />
+                            </View>
+
+                        }
+                        keyExtractor={(item) => item.id.toString()}
+                        numColumns={3}
                     />
-                ))}
+                }
+
+
+
+
 
                 {isCalendarVisible &&
                     <CalendarScreen Day={currentDate} closeScreen={setCalendarVisible} returnDate={setCurrentDate}
                                     enableDates={enabledDates} maxDate={new Date(data.photo_manifest.max_date)}
                                     minDate={new Date(data.photo_manifest.photos[0].earth_date)}/>}
-
             </>
 
         }

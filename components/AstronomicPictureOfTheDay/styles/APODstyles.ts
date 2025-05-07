@@ -1,5 +1,4 @@
 import {StyleSheet} from "react-native";
-import {darkThemeChildContainer, lightThemeChildContainer} from "@/globalStyles/globalStyles";
 
 export const APODstyles = StyleSheet.create({
     container: {
@@ -24,12 +23,7 @@ export const APODstyles = StyleSheet.create({
         borderRadius: 5,
     },
 
-    childColorLight: {
-        backgroundColor: lightThemeChildContainer,
-    },
-    childColorDark: {
-        backgroundColor: darkThemeChildContainer,
-    },
+
 
     pictureOfTheDay: {
         width: "100%",

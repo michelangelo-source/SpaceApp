@@ -19,4 +19,10 @@ export const globalStyles = StyleSheet.create({
     darkContainer:{
         backgroundColor:darkThemeColor
     },
+    childColorLight: {
+        backgroundColor: lightThemeChildContainer,
+    },
+    childColorDark: {
+        backgroundColor: darkThemeChildContainer,
+    },
 })
