@@ -8,11 +8,14 @@ import {getPhotosByEarthDate, photosByEarthDateArr} from "@/components/MarsRover
 import {globalStyles} from "@/globalStyles/globalStyles";
 import {marsStyles} from "@/components/MarsRoverPhotos/styles/MarsStyles";
 import {MarsTexts} from "@/components/MarsRoverPhotos/texts/MarsTexts";
+import {PhotoPage} from "@/components/Photo/photoPage";
 
 export default function Mars() {
     const [data, setData] = useState<RoverManifest>();
     const [loadingState, setLoadingState] = useState<LoadingStateType>("Loading");
     const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
+    const [isBigPictureVisible, setBigPictureVisible] = useState<boolean>(false);
+    const [bigPictureIndex, setBigPictureIndex] = useState<number>(-1);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [currPhotos, setCurrPhotos] = useState<photosByEarthDateArr>();
     const [disabledDates, setDisabledDates] = useState<string[]>();
@@ -97,8 +100,12 @@ export default function Mars() {
                         <FlatList
                             style={marsStyles.photoListStyle}
                             data={currPhotos.photos}
-                            renderItem={({item}) =>
+                            renderItem={({item,index}) =>
                                 <View style={marsStyles.photoView}>
+                                    <TouchableOpacity onPress={()=>{
+                                        setBigPictureVisible(true)
+                                        setBigPictureIndex(index)
+                                    }}>
 
                                     <Image
                                         key={item.id}
@@ -108,6 +115,8 @@ export default function Mars() {
                                             uri: item.img_src,
                                         }}
                                     />
+
+                                    </TouchableOpacity>
                                 </View>
 
                             }
@@ -120,6 +129,11 @@ export default function Mars() {
 
                 }
 
+                {isBigPictureVisible&&currPhotos&&
+
+                    <PhotoPage swappable={true}  photos={currPhotos.photos} index={bigPictureIndex}  close={()=>setBigPictureVisible(false)}/>
+
+                    }
 
                 {isCalendarVisible &&
                     <CalendarScreen Day={currentDate} closeScreen={setCalendarVisible} returnDate={setCurrentDate}
