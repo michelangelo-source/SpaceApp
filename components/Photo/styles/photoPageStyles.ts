@@ -1,7 +1,6 @@
 import {StyleSheet} from "react-native";
 
-export const photoPageStyles =StyleSheet.create({
-
+export const photoPageStyles = StyleSheet.create({
     container: {
         zIndex: 5,
         position: "absolute",
@@ -9,23 +8,53 @@ export const photoPageStyles =StyleSheet.create({
         left: 0,
         height: "100%",
         width: "100%",
-        backgroundColor: "black",
-        opacity:0.8,
+        backgroundColor: "#000000C8",
         alignItems: "center",
         justifyContent: "center",
-        padding: 5,
     },
-    img:{
+    changePictureView: {
+        zIndex: 5,
+        position: "absolute",
+        top: "50%",
+        left: 0,
+        width: "100%",
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        transform: [{translateY: "-50%"}]
+    },
+    imgView: {
+        width: "100%",
+        padding: 20
+    },
+    mainImg: {
         width: "100%",
         height: "100%",
     },
-    closeView:{
-        backgroundColor:"blue",
-        width:200,
-        height:100,
+    arrowImg: {
+        width: 50,
+        height: 100,
     },
-    closeText:{
-        fontSize:20,
-        color:"white",
+    closeView: {
+        zIndex: 5,
+        position: "absolute",
+        top: 0,
+        left: 0,
+        width: "100%",
+        height: "100%",
+        justifyContent: "flex-start",
+        alignItems: "flex-end"
+    },
+    closeBtn: {
+        width: 50,
+        height: 50,
+        borderRadius: 5,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        margin: 10
+    },
+    closeText: {
+        fontSize: 20,
     }
 })

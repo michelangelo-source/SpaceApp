@@ -1,7 +1,9 @@
-import React from "react";
-import {Image, Text, TouchableOpacity, View} from "react-native";
+import React, {useEffect, useState} from "react";
+import {Image, Text, TouchableOpacity, useColorScheme, View} from "react-native";
 import {photoPageStyles} from "@/components/Photo/styles/photoPageStyles";
 import {photoByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
+import {photoTexts} from "@/components/Photo/text/PhotoTexts";
+import {globalStyles} from "@/globalStyles/globalStyles";
 
 interface PhotoProps {
     close: () => void
@@ -11,7 +13,6 @@ interface SwappablePageProps extends PhotoProps {
     swappable: true;
     photos: photoByEarthDate[]
     index: number
-
 }
 
 interface NonSwappablePageProps extends PhotoProps {
@@ -22,20 +23,68 @@ interface NonSwappablePageProps extends PhotoProps {
 type PhotoPageProps = SwappablePageProps | NonSwappablePageProps
 
 export const PhotoPage = (props: PhotoPageProps) => {
+    const [photoIndex, setPhotoIndex] = useState(0);
+    useEffect(() => {
+        if (props.swappable) {
+            setPhotoIndex(props.index);
+        }
+    }, [])
+    const colorScheme = useColorScheme();
+    const themeChildContainerStyle =
+        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
+    const themeTextStyle =
+        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
+
     return (
         <View style={photoPageStyles.container}>
-            <Image source={{
-                uri: props.swappable ? props.photos[props.index].img_src : props.src
-            }}
+            <View style={photoPageStyles.imgView}>
+                <Image source={{
+                    uri: props.swappable ? props.photos[photoIndex].img_src : props.src
+                }}
+                       resizeMode={"contain"}
+                       style={photoPageStyles.mainImg}
+                />
 
-                   style={photoPageStyles.img} resizeMode={"contain"}/>
+            </View>
+            <View style={[photoPageStyles.closeView]}>
+                <TouchableOpacity onPress={props.close}>
+                    <View style={[themeChildContainerStyle, photoPageStyles.closeBtn]}>
+                        <Text style={[themeTextStyle, photoPageStyles.closeText]}>{photoTexts.close}</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
+            <View style={photoPageStyles.changePictureView}>
+                {props.swappable &&
+                    <>
+                        <View>
+                            {photoIndex > 0 &&
+                                <TouchableOpacity onPress={() => {
+                                    setPhotoIndex(photoIndex - 1)
+                                }}>
+                                    <Image source={require('@/assets/images/leftArrow.png')}
+                                           resizeMode={"cover"}
+                                           style={photoPageStyles.arrowImg}
+                                    />
+                                </TouchableOpacity>
+                            }
+                        </View>
+                        {photoIndex < props.photos.length - 1 &&
+                            <TouchableOpacity onPress={() => {
+                                setPhotoIndex(photoIndex + 1)
+                            }}>
+                                <Image source={
+                                    require('@/assets/images/rightArrow.png')
+                                }
+                                       resizeMode={"cover"}
+                                       style={photoPageStyles.arrowImg}
+                                />
+                            </TouchableOpacity>
+                        }
+                    </>
+                }
 
-            <TouchableOpacity onPress={props.close}>
-                <View style={photoPageStyles.closeView}>
 
-                    <Text style={photoPageStyles.closeText}>Close</Text>
-                </View>
-            </TouchableOpacity>
+            </View>
         </View>
     )
 }

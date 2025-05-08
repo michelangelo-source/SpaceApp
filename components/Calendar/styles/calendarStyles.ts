@@ -14,7 +14,6 @@ export const calendarStyles = StyleSheet.create({
         left: 0,
         height: "100%",
         width: "100%",
-
         alignItems: "center",
         justifyContent: "center",
     },
@@ -35,7 +34,6 @@ export const calendarStyles = StyleSheet.create({
         borderColor: lightThemeColor,
         backgroundColor: lightThemeChildContainer
     },
-
 
 
 })
