@@ -1,7 +1,7 @@
 import {Dimensions, StyleSheet} from "react-native";
 
 const windowWidth = Dimensions.get('window').width;
-
+const windowHeight = Dimensions.get('window').height;
 export const marsStyles = StyleSheet.create({
     container: {
         flex: 1,
@@ -28,13 +28,22 @@ export const marsStyles = StyleSheet.create({
     photoListStyle: {
         width: "100%",
     },
-    photoView: {
+    photoViewPortrait: {
         width: windowWidth / 3,
         height: windowWidth / 3,
         padding: 5
     },
-    photoImg: {
+    photoImgPortrait: {
         width: windowWidth / 3 - 10,
         height: windowWidth / 3 - 10,
+    },
+    photoViewLandscape: {
+        width: windowHeight / 6,
+        height: windowHeight / 6,
+        padding: 5
+    },
+    photoImgLandscape: {
+        width: windowHeight / 6 - 10,
+        height: windowHeight / 6 - 10,
     }
 })

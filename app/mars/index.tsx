@@ -1,4 +1,4 @@
-import {Dimensions, FlatList, Image, Text, TouchableOpacity, useColorScheme, View} from "react-native";
+import {FlatList, Image, Text, TouchableOpacity, useColorScheme, View} from "react-native";
 import {useEffect, useState} from "react";
 import {getManifest, RoverManifest} from "@/components/MarsRoverPhotos/api/manifest";
 import * as ScreenOrientation from "expo-screen-orientation";
@@ -20,9 +20,8 @@ export default function Mars() {
     const [currPhotos, setCurrPhotos] = useState<photosByEarthDateArr>();
     const [disabledDates, setDisabledDates] = useState<string[]>();
     const [orientation, setOrientation] = useState<number>(-1);
-    const windowWidth = Dimensions.get('window').width;
-    const windowHeight = Dimensions.get('window').height;
     const colorScheme = useColorScheme();
+
     const themeTextStyle =
         colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
 
@@ -31,7 +30,6 @@ export default function Mars() {
 
     const themeChildContainerStyle =
         colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
-
 
     useEffect(() => {
         setLoadingState("Loading")
@@ -66,12 +64,10 @@ export default function Mars() {
     const disableDates = (enabledDates: string[]) => {
         const toStr = (date: Date) => date.toISOString().slice(0, 10);
         const dates = [...enabledDates].sort();
-
         const start = new Date(dates[0]);
         const end = new Date(dates[dates.length - 1]);
         const inputSet = new Set(dates);
         const missing: string[] = [];
-
         for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
             const s = toStr(d);
             if (!inputSet.has(s)) missing.push(s);
@@ -93,47 +89,40 @@ export default function Mars() {
                     </Text>
                 </TouchableOpacity>
 
-
                 {currPhotos &&
                     <View style={marsStyles.photoListView}>
-
                         <FlatList
                             style={marsStyles.photoListStyle}
                             data={currPhotos.photos}
-                            renderItem={({item,index}) =>
-                                <View style={marsStyles.photoView}>
-                                    <TouchableOpacity onPress={()=>{
+                            renderItem={({item, index}) =>
+                                <View
+                                    style={orientation === 3 || orientation === 4 ? marsStyles.photoViewLandscape : marsStyles.photoViewPortrait}>
+                                    <TouchableOpacity onPress={() => {
                                         setBigPictureVisible(true)
                                         setBigPictureIndex(index)
                                     }}>
-
-                                    <Image
-                                        key={item.id}
-                                        style={marsStyles.photoImg}
-                                        resizeMode={"cover"}
-                                        source={{
-                                            uri: item.img_src,
-                                        }}
-                                    />
-
+                                        <Image
+                                            key={item.id}
+                                            style={orientation === 3 || orientation === 4 ? marsStyles.photoImgLandscape : marsStyles.photoImgPortrait}
+                                            resizeMode={"cover"}
+                                            source={{
+                                                uri: item.img_src,
+                                            }}
+                                        />
                                     </TouchableOpacity>
                                 </View>
-
                             }
                             keyExtractor={(item) => item.id.toString()}
                             key={orientation === 3 || orientation === 4 ? 6 : 3}
-                            numColumns={orientation === 3 || orientation === 4 ? Math.floor(windowWidth / (windowHeight / 3)) + 1 : 3}
+                            numColumns={orientation === 3 || orientation === 4 ? 6 : 3}
                         />
-
                     </View>
-
                 }
 
-                {isBigPictureVisible&&currPhotos&&
-
-                    <PhotoPage swappable={true}  photos={currPhotos.photos} index={bigPictureIndex}  close={()=>setBigPictureVisible(false)}/>
-
-                    }
+                {isBigPictureVisible && currPhotos &&
+                    <PhotoPage swappable={true} photos={currPhotos.photos} index={bigPictureIndex}
+                               close={() => setBigPictureVisible(false)}/>
+                }
 
                 {isCalendarVisible &&
                     <CalendarScreen Day={currentDate} closeScreen={setCalendarVisible} returnDate={setCurrentDate}
