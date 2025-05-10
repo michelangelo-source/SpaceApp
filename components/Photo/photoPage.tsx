@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from "react";
-import {Image, Text, TouchableOpacity, useColorScheme, View} from "react-native";
+import {Image, Text, TouchableOpacity, View} from "react-native";
 import {photoPageStyles} from "@/components/Photo/styles/photoPageStyles";
 import {photoByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
 import {photoTexts} from "@/components/Photo/text/PhotoTexts";
-import {globalStyles} from "@/globalStyles/globalStyles";
+import {useThemeStyles} from "@/hooks/themeHook";
 
 interface PhotoProps {
     close: () => void
@@ -29,11 +29,7 @@ export const PhotoPage = (props: PhotoPageProps) => {
             setPhotoIndex(props.index);
         }
     }, [])
-    const colorScheme = useColorScheme();
-    const themeChildContainerStyle =
-        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
-    const themeTextStyle =
-        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
+    const themeStyles = useThemeStyles();
 
     return (
         <View style={photoPageStyles.container}>
@@ -44,47 +40,42 @@ export const PhotoPage = (props: PhotoPageProps) => {
                        resizeMode={"contain"}
                        style={photoPageStyles.mainImg}
                 />
-
             </View>
             <View style={[photoPageStyles.closeView]}>
                 <TouchableOpacity onPress={props.close}>
-                    <View style={[themeChildContainerStyle, photoPageStyles.closeBtn]}>
-                        <Text style={[themeTextStyle, photoPageStyles.closeText]}>{photoTexts.close}</Text>
+                    <View style={[themeStyles.childContainerTheme, photoPageStyles.closeBtn]}>
+                        <Text style={[themeStyles.textTheme, photoPageStyles.closeText]}>{photoTexts.close}</Text>
                     </View>
                 </TouchableOpacity>
             </View>
-            <View style={photoPageStyles.changePictureView}>
-                {props.swappable &&
-                    <>
-                        <View>
-                            {photoIndex > 0 &&
-                                <TouchableOpacity onPress={() => {
-                                    setPhotoIndex(photoIndex - 1)
-                                }}>
-                                    <Image source={require('@/assets/images/leftArrow.png')}
-                                           resizeMode={"cover"}
-                                           style={photoPageStyles.arrowImg}
-                                    />
-                                </TouchableOpacity>
-                            }
-                        </View>
-                        {photoIndex < props.photos.length - 1 &&
+            {props.swappable &&
+                <View style={photoPageStyles.changePictureView}>
+                    <View>
+                        {photoIndex > 0 &&
                             <TouchableOpacity onPress={() => {
-                                setPhotoIndex(photoIndex + 1)
+                                setPhotoIndex(photoIndex - 1)
                             }}>
-                                <Image source={
-                                    require('@/assets/images/rightArrow.png')
-                                }
+                                <Image source={require('@/assets/images/leftArrow.png')}
                                        resizeMode={"cover"}
                                        style={photoPageStyles.arrowImg}
                                 />
                             </TouchableOpacity>
                         }
-                    </>
-                }
-
-
-            </View>
+                    </View>
+                    {photoIndex < props.photos.length - 1 &&
+                        <TouchableOpacity onPress={() => {
+                            setPhotoIndex(photoIndex + 1)
+                        }}>
+                            <Image source={
+                                require('@/assets/images/rightArrow.png')
+                            }
+                                   resizeMode={"cover"}
+                                   style={photoPageStyles.arrowImg}
+                            />
+                        </TouchableOpacity>
+                    }
+                </View>
+            }
         </View>
     )
 }
