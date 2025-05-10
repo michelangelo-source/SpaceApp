@@ -1,5 +1,4 @@
 import {StyleSheet} from "react-native";
-import {darkThemeColor, lightThemeColor} from "@/globalStyles/globalStyles";
 
 export const indexStyles = StyleSheet.create({
     container: {
@@ -24,10 +23,4 @@ export const indexStyles = StyleSheet.create({
         height:60,
         opacity:0.9,
     },
-    lightMenuElem:{
-        backgroundColor:lightThemeColor
-    },
-    darkMenuElem:{
-        backgroundColor:darkThemeColor
-    }
 })

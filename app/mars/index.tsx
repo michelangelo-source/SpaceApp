@@ -1,14 +1,14 @@
-import {FlatList, Image, Text, TouchableOpacity, useColorScheme, View} from "react-native";
+import {FlatList, Image, Text, TouchableOpacity, View} from "react-native";
 import {useEffect, useState} from "react";
 import {getManifest, RoverManifest} from "@/components/MarsRoverPhotos/api/manifest";
 import * as ScreenOrientation from "expo-screen-orientation";
 import {LoadingStateType} from "@/types/LoadingStateType";
 import CalendarScreen from "@/components/Calendar/calendarScreen";
 import {getPhotosByEarthDate, photosByEarthDateArr} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
-import {globalStyles} from "@/globalStyles/globalStyles";
 import {marsStyles} from "@/components/MarsRoverPhotos/styles/MarsStyles";
 import {MarsTexts} from "@/components/MarsRoverPhotos/texts/MarsTexts";
 import {PhotoPage} from "@/components/Photo/photoPage";
+import {useThemeStyles} from "@/hooks/themeHook";
 
 export default function Mars() {
     const [data, setData] = useState<RoverManifest>();
@@ -20,16 +20,7 @@ export default function Mars() {
     const [currPhotos, setCurrPhotos] = useState<photosByEarthDateArr>();
     const [disabledDates, setDisabledDates] = useState<string[]>();
     const [orientation, setOrientation] = useState<number>(-1);
-    const colorScheme = useColorScheme();
-
-    const themeTextStyle =
-        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
-
-    const themeContainerStyle =
-        colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
-
-    const themeChildContainerStyle =
-        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
+    const themeStyles = useThemeStyles()
 
     useEffect(() => {
         setLoadingState("Loading")
@@ -75,16 +66,16 @@ export default function Mars() {
         return missing;
     }
 
-    return (<View style={[themeContainerStyle, marsStyles.container]}>
+    return (<View style={[themeStyles.containerTheme, marsStyles.container]}>
         {loadingState === "Loaded" && currentDate && data &&
             <>
-                <Text style={[themeTextStyle, marsStyles.title]}>{MarsTexts.title}</Text>
+                <Text style={[themeStyles.textTheme, marsStyles.title]}>{MarsTexts.title}</Text>
                 <TouchableOpacity onPress={() => {
                     setCalendarVisible(true)
                 }}
-                                  style={[themeChildContainerStyle, marsStyles.dateBtn]}
+                                  style={[themeStyles.childContainerTheme, marsStyles.dateBtn]}
                 >
-                    <Text style={[themeTextStyle]}>
+                    <Text style={[themeStyles.textTheme]}>
                         {currentDate}
                     </Text>
                 </TouchableOpacity>

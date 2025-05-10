@@ -1,4 +1,4 @@
-import {Image, Linking, ScrollView, Text, TouchableOpacity, useColorScheme, View} from "react-native";
+import {Image, Linking, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import {useEffect, useState} from "react";
 import {LoadingStateType} from "@/types/LoadingStateType";
 import {APODData, getAPOD} from "@/components/AstronomicPictureOfTheDay/api/AstonomicPictureOfTheDayRequest";
@@ -6,23 +6,14 @@ import {handleDate} from "@/functions/handleDate";
 import {APODTexts} from "@/components/AstronomicPictureOfTheDay/texts/APODTexts";
 import {APODstyles} from "@/components/AstronomicPictureOfTheDay/styles/APODstyles";
 import CalendarScreen from "@/components/Calendar/calendarScreen";
-import {globalStyles} from "@/globalStyles/globalStyles";
+import {useThemeStyles} from "@/hooks/themeHook";
 
 export default function Apod() {
     const [loadingState, setLoadingState] = useState<LoadingStateType>("Loading");
     const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
     const [APOD, setAPOD] = useState<APODData>();
     const [APODDay, setAPODDay] = useState<string>(handleDate(new Date()));
-    const colorScheme = useColorScheme();
-    const themeTextStyle =
-        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
-
-    const themeContainerStyle =
-        colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
-
-    const themeChildContainerStyle =
-        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
-
+    const themeStyles = useThemeStyles()
 
     useEffect(() => {
         setLoadingState("Loading")
@@ -32,27 +23,28 @@ export default function Apod() {
     }, [APODDay])
 
     return (
-        <ScrollView style={[themeContainerStyle, APODstyles.container]}>
+        <ScrollView style={[themeStyles.containerTheme, APODstyles.container]}>
 
             <View style={APODstyles.titleView}>
 
 
-            <Text style={[themeTextStyle,APODstyles.titleText]}>{APODTexts.title}</Text>
+                <Text style={[themeStyles.textTheme, APODstyles.titleText]}>{APODTexts.title}</Text>
 
 
-                <TouchableOpacity style={[APODstyles.chosenDate,themeChildContainerStyle]} onPress={()=>{setCalendarVisible(true)}}>
-                    <Text style={themeTextStyle}>{APODDay}</Text>
+                <TouchableOpacity style={[themeStyles.childContainerTheme, APODstyles.chosenDate]} onPress={() => {
+                    setCalendarVisible(true)
+                }}>
+                    <Text style={themeStyles.textTheme}>{APODDay}</Text>
                 </TouchableOpacity>
 
             </View>
-            {isCalendarVisible&&<CalendarScreen Day={APODDay} returnDate={setAPODDay} closeScreen={setCalendarVisible} minDate={new Date(1995, 5, 16)}/>}
-            {loadingState === "Loaded" && APOD && APOD.media_type==="image" ?
+            {isCalendarVisible && <CalendarScreen Day={APODDay} returnDate={setAPODDay} closeScreen={setCalendarVisible}
+                                                  minDate={new Date(1995, 5, 16)}/>}
+            {loadingState === "Loaded" && APOD && APOD.media_type === "image" ?
                 <>
-                    <Text style={themeTextStyle}>
+                    <Text style={themeStyles.textTheme}>
                         {APOD.title}
                     </Text>
-
-
 
 
                     <Image
@@ -63,21 +55,24 @@ export default function Apod() {
                         }}
                     />
 
-                    {APOD.copyright&& <Text style={[themeTextStyle,APODstyles.credentialsText]}>Credentials: {APOD.copyright}</Text>}
 
-                    <View style={[themeChildContainerStyle,APODstyles.pictureExplanationView]}>
+                    {APOD.copyright && <Text
+                        style={[themeStyles.textTheme, APODstyles.credentialsText]}>Credentials: {APOD.copyright}</Text>}
 
-                    <Text style={[themeTextStyle,APODstyles.pictureExplanation]}>
-                        {APOD.explanation}
-                    </Text>
+                    <View style={[themeStyles.childContainerTheme, APODstyles.pictureExplanationView]}>
+
+                        <Text style={[themeStyles.textTheme, APODstyles.pictureExplanation]}>
+                            {APOD.explanation}
+                        </Text>
                     </View>
 
                 </>
                 :
-                loadingState === "Loaded"&&APOD ? <Text style={themeTextStyle}>Wrong file format to see check:
-                    <Text   onPress={() => {
-                        Linking.openURL(APOD.url)}}>{APOD.url}</Text>
-                    </Text>  :<Text style={themeTextStyle}>{loadingState}</Text>
+                loadingState === "Loaded" && APOD ? <Text style={themeStyles.textTheme}>Wrong file format to see check:
+                    <Text onPress={() => {
+                        Linking.openURL(APOD.url)
+                    }}>{APOD.url}</Text>
+                </Text> : <Text style={themeStyles.textTheme}>{loadingState}</Text>
 
 
             }
