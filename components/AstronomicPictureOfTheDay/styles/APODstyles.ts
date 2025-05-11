@@ -13,11 +13,9 @@ export const APODstyles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
-
     titleText: {
         fontSize: 20
     },
-
     chosenDate: {
         margin: 20,
         alignItems: "center",
@@ -26,8 +24,6 @@ export const APODstyles = StyleSheet.create({
         height: 50,
         borderRadius: 5,
     },
-
-
     pictureOfTheDay: {
         width: "100%",
         height: 300,
@@ -37,8 +33,6 @@ export const APODstyles = StyleSheet.create({
         fontSize: 15,
         marginTop: 5
     },
-
-
     pictureExplanationView: {
         marginTop: 5,
         padding: 10,
@@ -47,6 +41,9 @@ export const APODstyles = StyleSheet.create({
     },
     pictureExplanation: {
         textAlign: "justify",
+    },
+    wrongFormatLink:{
+        color: "blue",
+        textDecorationLine:"underline",
     }
-
 });

@@ -1,28 +1,32 @@
 import {Image, Linking, ScrollView, Text, TouchableOpacity, View} from "react-native";
-import {useEffect, useState} from "react";
-import {LoadingStateType} from "@/types/LoadingStateType";
-import {APODData, getAPOD} from "@/components/AstronomicPictureOfTheDay/api/AstonomicPictureOfTheDayRequest";
+import {useState} from "react";
+import {getAPOD} from "@/components/AstronomicPictureOfTheDay/api/AstonomicPictureOfTheDayRequest";
 import {handleDate} from "@/functions/handleDate";
 import {APODTexts} from "@/components/AstronomicPictureOfTheDay/texts/APODTexts";
 import {APODstyles} from "@/components/AstronomicPictureOfTheDay/styles/APODstyles";
 import CalendarScreen from "@/components/Calendar/calendarScreen";
 import {useThemeStyles} from "@/hooks/themeHook";
 import {PhotoPage} from "@/components/Photo/photoPage";
+import {useQuery} from "@tanstack/react-query";
 
 export default function Apod() {
-    const [loadingState, setLoadingState] = useState<LoadingStateType>("Loading");
     const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
-    const [APOD, setAPOD] = useState<APODData>();
     const [APODDay, setAPODDay] = useState<string>(handleDate(new Date()));
     const themeStyles = useThemeStyles()
     const [isBigPictureVisible, setBigPictureVisible] = useState<boolean>(false);
 
-    useEffect(() => {
-        setLoadingState("Loading")
-        getAPOD(APODDay, setLoadingState).then(res => {
-            setAPOD(res)
-        })
-    }, [APODDay])
+    const {isPending, isError, data, error} = useQuery({
+        queryKey: [APODDay],
+        queryFn: () => getAPOD(APODDay),
+    })
+
+    if (isPending) {
+        return <Text>Loading...</Text>
+    }
+
+    if (isError) {
+        return <Text>Error: {error.message}</Text>
+    }
 
     return (
         <View style={[themeStyles.containerTheme, APODstyles.container]}>
@@ -35,11 +39,10 @@ export default function Apod() {
                         <Text style={themeStyles.textTheme}>{APODDay}</Text>
                     </TouchableOpacity>
                 </View>
-
-                {loadingState === "Loaded" && APOD && APOD.media_type === "image" ?
+                {data.media_type === "image" ?
                     <>
                         <Text style={themeStyles.textTheme}>
-                            {APOD.title}
+                            {data.title}
                         </Text>
 
                         <TouchableOpacity onPress={() => {
@@ -49,25 +52,24 @@ export default function Apod() {
                                 style={APODstyles.pictureOfTheDay}
                                 resizeMode={"cover"}
                                 source={{
-                                    uri: APOD.url,
+                                    uri: data.url,
                                 }}
                             />
                         </TouchableOpacity>
-                        {APOD.copyright && <Text
-                            style={[themeStyles.textTheme, APODstyles.credentialsText]}>Credentials: {APOD.copyright}</Text>}
+                        {data.copyright && <Text
+                            style={[themeStyles.textTheme, APODstyles.credentialsText]}>Credentials: {data.copyright}</Text>}
                         <View style={[themeStyles.childContainerTheme, APODstyles.pictureExplanationView]}>
                             <Text style={[themeStyles.textTheme, APODstyles.pictureExplanation]}>
-                                {APOD.explanation}
+                                {data.explanation}
                             </Text>
                         </View>
                     </>
                     :
-                    loadingState === "Loaded" && APOD ?
-                        <Text style={themeStyles.textTheme}>Wrong file format to see check:
-                            <Text onPress={() => {
-                                Linking.openURL(APOD.url)
-                            }}>{APOD.url}</Text>
-                        </Text> : <Text style={themeStyles.textTheme}>{loadingState}</Text>
+                    <Text style={themeStyles.textTheme}>{APODTexts.wrongFormat}{"\n"}
+                        <Text style={APODstyles.wrongFormatLink} onPress={() => {
+                            Linking.openURL(data.url)
+                        }}>{data.url}</Text>
+                    </Text>
                 }
 
 
@@ -75,9 +77,9 @@ export default function Apod() {
             {isCalendarVisible &&
                 <CalendarScreen Day={APODDay} returnDate={setAPODDay} closeScreen={setCalendarVisible}
                                 minDate={new Date(1995, 5, 16)}/>}
-            {isBigPictureVisible && APOD &&
+            {isBigPictureVisible &&
                 <PhotoPage swappable={false}
-                           src={APOD.url}
+                           src={data.url}
                            close={() => setBigPictureVisible(false)}/>
             }
         </View>
