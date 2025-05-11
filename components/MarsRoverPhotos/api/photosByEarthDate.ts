@@ -1,4 +1,4 @@
-import {LoadingStateType} from "@/types/LoadingStateType";
+import axios from "axios";
 
 export type photoByEarthDate = {
     "id": number,
@@ -24,22 +24,17 @@ export type photosByEarthDateArr = {
     "photos": [photoByEarthDate]
 }
 
-export const getPhotosByEarthDate = async (setLoadingState: (state: LoadingStateType) => void, earthDate: string): Promise<photosByEarthDateArr> => {
+export const getPhotosByEarthDate = async (earthDate: string): Promise<photosByEarthDateArr> => {
     const Api_Key = process.env.EXPO_PUBLIC_API_KEY;
     const origin = process.env.EXPO_PUBLIC_ORIGIN;
     if (!Api_Key || !origin) {
-        setLoadingState("Failed")
         throw new Error('no API_key or origin');
     }
     try {
-        const response = await fetch(origin + "/mars-photos/api/v1/rovers/curiosity/photos?earth_date=" + earthDate + "&api_key=" + Api_Key)
-        if (!response.ok) {
-            setLoadingState("Failed")
-        }
-        setLoadingState("Loaded")
-        return await response.json();
+        const response = await axios.get<photosByEarthDateArr>(origin + "/mars-photos/api/v1/rovers/curiosity/photos?earth_date=" + earthDate + "&api_key=" + Api_Key)
+        return response.data;
     } catch (err) {
-        setLoadingState("Failed")
+        console.error(err);
         throw err;
     }
 }

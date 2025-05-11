@@ -1,1 +1,0 @@
-export type LoadingStateType="Loading"|"Loaded"|"Failed"

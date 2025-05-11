@@ -1,7 +1,6 @@
 import {Image, Linking, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import {useState} from "react";
 import {getAPOD} from "@/components/AstronomicPictureOfTheDay/api/AstonomicPictureOfTheDayRequest";
-import {handleDate} from "@/functions/handleDate";
 import {APODTexts} from "@/components/AstronomicPictureOfTheDay/texts/APODTexts";
 import {APODstyles} from "@/components/AstronomicPictureOfTheDay/styles/APODstyles";
 import CalendarScreen from "@/components/Calendar/calendarScreen";
@@ -11,7 +10,7 @@ import {useQuery} from "@tanstack/react-query";
 
 export default function Apod() {
     const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
-    const [APODDay, setAPODDay] = useState<string>(handleDate(new Date()));
+    const [APODDay, setAPODDay] = useState<string>(new Date().toISOString().slice(0, 10));
     const themeStyles = useThemeStyles()
     const [isBigPictureVisible, setBigPictureVisible] = useState<boolean>(false);
 
