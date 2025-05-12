@@ -46,6 +46,7 @@ interface NasaResources {
 
 export const getResources = async (query: string, page: number) => {
     try {
+        console.log(query)
         const response = await axios.get<NasaResources>(`http://images-api.nasa.gov/search?q=${query}&media_type=image&page=${page}`)
         return response.data;
     } catch (err) {

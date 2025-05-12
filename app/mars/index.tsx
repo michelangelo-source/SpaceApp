@@ -1,7 +1,7 @@
 import {FlatList, Image, Text, TouchableOpacity, View} from "react-native";
 import {useEffect, useState} from "react";
 import {getManifest} from "@/components/MarsRoverPhotos/api/manifest";
-import * as ScreenOrientation from "expo-screen-orientation";
+
 import CalendarScreen from "@/components/Calendar/calendarScreen";
 import {getPhotosByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
 import {marsStyles} from "@/components/MarsRoverPhotos/styles/MarsStyles";
@@ -9,6 +9,8 @@ import {MarsTexts} from "@/components/MarsRoverPhotos/texts/MarsTexts";
 import {PhotoPage} from "@/components/Photo/photoPage";
 import {useThemeStyles} from "@/hooks/themeHook";
 import {useQuery} from "@tanstack/react-query";
+import {useOrientation} from "@/hooks/useOrientation";
+import {globalStyles} from "@/globalStyles/globalStyles";
 
 
 
@@ -18,7 +20,7 @@ export default function Mars() {
     const [bigPictureIndex, setBigPictureIndex] = useState<number>(-1);
     const [currentDate, setCurrentDate] = useState<string>("");
     const [disabledDates, setDisabledDates] = useState<string[]>();
-    const [orientation, setOrientation] = useState<number>(-1);
+    const orientation=useOrientation();
     const themeStyles = useThemeStyles()
 
     const disableDates = (enabledDates: string[]) => {
@@ -46,21 +48,7 @@ export default function Mars() {
         enabled: !!currentDate,
     })
 
-    useEffect(() => {
 
-        ScreenOrientation.getOrientationAsync().then(res => {
-            setOrientation(res)
-        })
-
-        ScreenOrientation.addOrientationChangeListener((res) => {
-            setOrientation(res.orientationInfo.orientation)
-        })
-
-        return () => {
-            ScreenOrientation.removeOrientationChangeListeners()
-        }
-
-    }, [])
     useEffect(() => {
         if (manifest) {
             const dates = manifest.photo_manifest.photos.map(p => p.earth_date);
@@ -98,20 +86,20 @@ export default function Mars() {
             </TouchableOpacity>
 
 
-            <View style={marsStyles.photoListView}>
+            <View style={globalStyles.photoListView}>
                 <FlatList
-                    style={marsStyles.photoListStyle}
+                    style={globalStyles.photoListStyle}
                     data={currPhotos.photos}
                     renderItem={({item, index}) =>
                         <View
-                            style={orientation === 3 || orientation === 4 ? marsStyles.photoViewLandscape : marsStyles.photoViewPortrait}>
+                            style={orientation === 3 || orientation === 4 ? globalStyles.photoViewLandscape : globalStyles.photoViewPortrait}>
                             <TouchableOpacity onPress={() => {
                                 setBigPictureVisible(true)
                                 setBigPictureIndex(index)
                             }}>
                                 <Image
                                     key={item.id}
-                                    style={orientation === 3 || orientation === 4 ? marsStyles.photoImgLandscape : marsStyles.photoImgPortrait}
+                                    style={orientation === 3 || orientation === 4 ? globalStyles.photoImgLandscape : globalStyles.photoImgPortrait}
                                     resizeMode={"cover"}
                                     source={{
                                         uri: item.img_src,

@@ -4,6 +4,7 @@ import {photoPageStyles} from "@/components/Photo/styles/photoPageStyles";
 import {photoByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
 import {photoTexts} from "@/components/Photo/text/PhotoTexts";
 import {useThemeStyles} from "@/hooks/themeHook";
+import {resourcesPhoto} from "@/app/resources";
 
 interface PhotoProps {
     close: () => void
@@ -11,7 +12,7 @@ interface PhotoProps {
 
 interface SwappablePageProps extends PhotoProps {
     swappable: true;
-    photos: photoByEarthDate[]
+    photos: photoByEarthDate[]|resourcesPhoto[]
     index: number
 }
 
