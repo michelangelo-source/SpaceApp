@@ -12,7 +12,7 @@ interface PhotoProps {
 
 interface SwappablePageProps extends PhotoProps {
     swappable: true;
-    photos: photoByEarthDate[]|resourcesPhoto[]
+    photos: resourcesPhoto[]|photoByEarthDate[]
     index: number
 }
 
