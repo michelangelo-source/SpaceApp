@@ -1,10 +1,12 @@
-import {Button, Text, TextInput, View} from "react-native";
+import {Text, TextInput, TouchableOpacity, View, Image} from "react-native";
 import {useQuery,} from "@tanstack/react-query";
 import {getResources} from "@/components/Resources/api/getResources";
 import {useEffect, useRef, useState} from "react";
 import {useThemeStyles} from "@/hooks/themeHook";
 import {resourcesStyles} from "@/components/Resources/styles/resourcesStyles";
 import {Gallery} from "@/components/Gallery/gallery";
+
+import {resourcesText} from "@/components/Resources/texts/resourcesText";
 
 
 export interface resourcesPhoto {
@@ -47,22 +49,31 @@ export default function Resources() {
         setQuery(queryRef.current)
     }
     useEffect(() => {
-        console.log(isPending)
         if (query !== "") {
             refetch()
         }
     }, [query])
     return (
         <View style={[themeStyles.containerTheme, resourcesStyles.container]}>
-            <Text style={[themeStyles.textTheme]}>
-                RESOURCES
-            </Text>
+            <View style={resourcesStyles.titleView}>
+                <Text style={[themeStyles.textTheme, resourcesStyles.titleText]}>
+                    {resourcesText.title}
+                </Text>
+            </View>
 
-            <View style={[themeStyles.childContainerTheme, resourcesStyles.formView]}>
-                <TextInput onSubmitEditing={submitForm} onChangeText={(query) => {
-                    queryRef.current = query
-                }} placeholder={"Search..."} style={[themeStyles.textTheme, resourcesStyles.textInput]}/>
-                <Button onPress={submitForm} title={"Submit"}/>
+            <View style={[resourcesStyles.formView]}>
+                <View style={[themeStyles.childContainerTheme,resourcesStyles.textInputView]}>
+                    <TextInput onSubmitEditing={submitForm} onChangeText={(query) => {
+                        queryRef.current = query
+                    }} placeholder={"Search..."} style={[themeStyles.textTheme]}/>
+                </View>
+                <TouchableOpacity style={resourcesStyles.submitTouchable} onPress={submitForm}>
+                    <View style={[themeStyles.thirdColor, resourcesStyles.submitView]}>
+                        <Text
+                            style={[themeStyles.textTheme]}>{resourcesText.submitBtn}</Text>
+                    </View>
+                </TouchableOpacity>
+
             </View>
 
             {isPending && query !== "" &&
@@ -71,8 +82,14 @@ export default function Resources() {
             {isError &&
                 <Text>Error: {error.message}</Text>
             }
-            {data&&
-            <Gallery photos={data.photos}/>
+            {data ?
+                <Gallery photos={data.photos}/>
+                :
+                <Image
+                    source={require("@/assets/images/loupe.png")}
+                    style={resourcesStyles.loupeStyleImg}
+                    resizeMode={"contain"}
+                />
             }
 
         </View>

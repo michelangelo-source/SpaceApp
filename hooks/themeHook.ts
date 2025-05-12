@@ -12,11 +12,13 @@ export const useThemeStyles=()=>{
         colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
     const themeChildContainerStyle =
         colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
-
+    const themeThirdColor =
+        colorScheme === 'light' ? globalStyles.thirdLightThemeColor : globalStyles.thirdDarkThemeColor
     return{
         textTheme:themeTextStyle,
         containerTheme:themeContainerStyle,
         childContainerTheme:themeChildContainerStyle,
         backgroundImage:themeBackgroundImage,
+        thirdColor:themeThirdColor,
     }
 };
