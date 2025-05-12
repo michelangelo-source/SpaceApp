@@ -1,13 +1,11 @@
-import {Text, TextInput, TouchableOpacity, View, Image} from "react-native";
+import {Image, Text, TextInput, TouchableOpacity, View} from "react-native";
 import {useQuery,} from "@tanstack/react-query";
 import {getResources} from "@/components/Resources/api/getResources";
 import {useEffect, useRef, useState} from "react";
 import {useThemeStyles} from "@/hooks/themeHook";
 import {resourcesStyles} from "@/components/Resources/styles/resourcesStyles";
 import {Gallery} from "@/components/Gallery/gallery";
-
 import {resourcesText} from "@/components/Resources/texts/resourcesText";
-
 
 export interface resourcesPhoto {
     date_created: string,
@@ -17,23 +15,21 @@ export interface resourcesPhoto {
 
 export interface resourcesPhotos {
     photos: Array<resourcesPhoto>;
-    "links": Array<
+    links:
         {
-            "rel": "prev" | "next",
-            "prompt": "Previous" | "Next",
-            "href": string
+            prev: boolean,
+            next: boolean,
         }
-    >
 }
-
 
 export default function Resources() {
     const [query, setQuery] = useState<string>("");
     const [page, setPage] = useState<number>(1);
+    const [date, setDate] = useState<Date>();
     const queryRef = useRef('');
     const themeStyles = useThemeStyles()
     const {isPending, data, refetch, isError, error} = useQuery({
-        queryKey: ["resources", query, page],
+        queryKey: ["resources", query, page, date],
         queryFn: () => getResources(query, page),
         enabled: false,
         select: (data) => ({
@@ -42,7 +38,10 @@ export default function Resources() {
                 description: item.data[0].description,
                 img_src: item.links?.[0]?.href,
             })),
-            links: data.links,
+            links: {
+                prev: data.collection.links.some(link => link.rel === "prev" && link.prompt === "Previous"),
+                next: data.collection.links.some(link => link.rel === "next" && link.prompt === "Next"),
+            }
         }),
     })
     const submitForm = () => {
@@ -52,7 +51,10 @@ export default function Resources() {
         if (query !== "") {
             refetch()
         }
-    }, [query])
+    }, [query, date])
+    useEffect(() => {
+        setDate(new Date())
+    }, [page]);
     return (
         <View style={[themeStyles.containerTheme, resourcesStyles.container]}>
             <View style={resourcesStyles.titleView}>
@@ -60,9 +62,8 @@ export default function Resources() {
                     {resourcesText.title}
                 </Text>
             </View>
-
             <View style={[resourcesStyles.formView]}>
-                <View style={[themeStyles.childContainerTheme,resourcesStyles.textInputView]}>
+                <View style={[themeStyles.childContainerTheme, resourcesStyles.textInputView]}>
                     <TextInput onSubmitEditing={submitForm} onChangeText={(query) => {
                         queryRef.current = query
                     }} placeholder={"Search..."} style={[themeStyles.textTheme]}/>
@@ -73,9 +74,7 @@ export default function Resources() {
                             style={[themeStyles.textTheme]}>{resourcesText.submitBtn}</Text>
                     </View>
                 </TouchableOpacity>
-
             </View>
-
             {isPending && query !== "" &&
                 <Text>Loading...</Text>
             }
@@ -83,7 +82,34 @@ export default function Resources() {
                 <Text>Error: {error.message}</Text>
             }
             {data ?
-                <Gallery photos={data.photos}/>
+                <>
+                    <Gallery photos={data.photos}/>
+                    {(data.links.prev || data.links.next) &&
+
+                        <View style={[resourcesStyles.navigationBar]}>
+                            <TouchableOpacity style={[resourcesStyles.prevTouchable]}
+                                              onPress={() => setPage(page - 1)}>
+                                {data.links.prev
+                                    &&
+                                    <View style={[themeStyles.thirdColor, resourcesStyles.prevButton]}>
+                                        <Text style={[themeStyles.textTheme]}>{resourcesText.previousPage}</Text>
+                                    </View>
+
+                                }
+                            </TouchableOpacity>
+                            {
+                                data.links.next
+                                &&
+                                <TouchableOpacity style={[resourcesStyles.nextTouchable]}
+                                                  onPress={() => setPage(page + 1)}>
+                                    <View style={[themeStyles.childContainerTheme, resourcesStyles.nextButton]}>
+                                        <Text style={[themeStyles.textTheme]}>{resourcesText.nextPage}</Text>
+                                    </View>
+                                </TouchableOpacity>
+                            }
+                        </View>
+                    }
+                </>
                 :
                 <Image
                     source={require("@/assets/images/loupe.png")}

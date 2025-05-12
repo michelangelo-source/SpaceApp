@@ -1,6 +1,5 @@
 import axios from "axios";
 
-
 interface NasaResources {
     collection: {
         items: Array<{
@@ -16,14 +15,13 @@ interface NasaResources {
                 }>
         }
         >
+        links: Array<
+            {
+                rel: "prev" | "next",
+                prompt: "Previous" | "Next",
+            }
+        >
     }
-    "links": Array<
-        {
-            "rel": "prev" | "next",
-            "prompt": "Previous" | "Next",
-            "href": string
-        }
-    >
 }
 
 export const getResources = async (query: string, page: number) => {
