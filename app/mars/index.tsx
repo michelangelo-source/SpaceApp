@@ -75,7 +75,7 @@ export default function Mars() {
             </TouchableOpacity>
 
 
-          <Gallery photos={currPhotos.photos}/>
+          <Gallery photos={currPhotos.photos} showDate={false} showDescription={false}/>
 
             {isCalendarVisible &&
                 <CalendarScreen Day={currentDate} closeScreen={setCalendarVisible} returnDate={setCurrentDate}

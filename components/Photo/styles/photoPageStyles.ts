@@ -25,11 +25,11 @@ export const photoPageStyles = StyleSheet.create({
     },
     imgView: {
         width: "100%",
-        padding: 20
+        paddingHorizontal: 20
     },
     mainImg: {
         width: "100%",
-        height: "100%",
+       height:400
     },
     arrowImg: {
         width: 50,
@@ -56,5 +56,22 @@ export const photoPageStyles = StyleSheet.create({
     },
     closeText: {
         fontSize: 20,
+    },
+    dateAndDescriptionText:{
+        color:"white"
+    },
+
+    descriptionScrollView:{
+        flex:1,
+        paddingHorizontal:10
+    },
+    descriptionView:{
+        zIndex: 8,
+        position: "absolute",
+        top: "80%",
+        height:"20%",
+        left: 0,
+        width: "100%",
     }
+
 })

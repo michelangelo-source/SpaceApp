@@ -100,7 +100,7 @@ export default function Resources() {
                 <>
                 {data.photos.length !== 0 ?
                     <>
-                        <Gallery photos={data.photos}/>
+                        <Gallery photos={data.photos} showDate={true} showDescription={true}/>
                         {(data.links.prev || data.links.next) &&
                             <View style={[resourcesStyles.navigationBar]}>
                                 <TouchableOpacity style={[resourcesStyles.prevTouchable]}

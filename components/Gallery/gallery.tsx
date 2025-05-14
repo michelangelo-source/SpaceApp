@@ -8,9 +8,11 @@ import {photoByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDa
 
 interface GalleryProps {
     photos: resourcesPhoto[] | photoByEarthDate[]
+    showDate: boolean;
+    showDescription: boolean;
 }
 
-type UnifiedPhoto = {
+export type UnifiedPhoto = {
     date_created: string;
     description?: string;
     img_src: string;
@@ -63,7 +65,7 @@ export const Gallery = (props: GalleryProps) => {
                 />
             </View>
             {isBigPictureVisible && props &&
-                <PhotoPage swappable={true} photos={props.photos} index={bigPictureIndex}
+                <PhotoPage swappable={true} photos={photos} index={bigPictureIndex} showDate={props.showDate} showDescription={props.showDescription}
                            close={() => setBigPictureVisible(false)}/>
             }
         </>

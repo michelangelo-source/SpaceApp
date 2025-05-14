@@ -1,19 +1,21 @@
 import React, {useEffect, useState} from "react";
-import {Image, Text, TouchableOpacity, View} from "react-native";
+import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
 import {photoPageStyles} from "@/components/Photo/styles/photoPageStyles";
-import {photoByEarthDate} from "@/components/MarsRoverPhotos/api/photosByEarthDate";
 import {photoTexts} from "@/components/Photo/text/PhotoTexts";
 import {useThemeStyles} from "@/hooks/themeHook";
-import {resourcesPhoto} from "@/app/resources";
+import {UnifiedPhoto} from "@/components/Gallery/gallery";
 
 interface PhotoProps {
     close: () => void
+
 }
 
 interface SwappablePageProps extends PhotoProps {
     swappable: true;
-    photos: resourcesPhoto[]|photoByEarthDate[]
+    photos: UnifiedPhoto[]
     index: number
+    showDate: boolean
+    showDescription: boolean
 }
 
 interface NonSwappablePageProps extends PhotoProps {
@@ -25,6 +27,7 @@ type PhotoPageProps = SwappablePageProps | NonSwappablePageProps
 
 export const PhotoPage = (props: PhotoPageProps) => {
     const [photoIndex, setPhotoIndex] = useState(0);
+    const [hiddenDescription, setHiddenDescription] = useState<boolean>(true);
     useEffect(() => {
         if (props.swappable) {
             setPhotoIndex(props.index);
@@ -42,6 +45,29 @@ export const PhotoPage = (props: PhotoPageProps) => {
                        style={photoPageStyles.mainImg}
                 />
             </View>
+
+            {props.swappable && props.showDate &&
+                <Text style={photoPageStyles.dateAndDescriptionText}>{
+                    new Date(props.photos[photoIndex].date_created).toLocaleDateString()
+                }</Text>
+            }
+            {props.swappable && props.showDescription &&
+                <View style={photoPageStyles.descriptionView}>
+                    <TouchableOpacity onPress={()=>setHiddenDescription(!hiddenDescription)}>
+                       <Text style={[photoPageStyles.dateAndDescriptionText]}>{hiddenDescription?photoTexts.showDescription:photoTexts.hideDescription}</Text>
+                    </TouchableOpacity>
+                    {!hiddenDescription &&
+
+                    <ScrollView style={photoPageStyles.descriptionScrollView}>
+                        <Text style={photoPageStyles.dateAndDescriptionText}>{
+                            props.photos[photoIndex].description
+                        }</Text>
+                    </ScrollView>
+                    }
+
+                </View>
+            }
+
             <View style={[photoPageStyles.closeView]}>
                 <TouchableOpacity onPress={props.close}>
                     <View style={[themeStyles.childContainerTheme, photoPageStyles.closeBtn]}>
@@ -49,6 +75,7 @@ export const PhotoPage = (props: PhotoPageProps) => {
                     </View>
                 </TouchableOpacity>
             </View>
+
             {props.swappable &&
                 <View style={photoPageStyles.changePictureView}>
                     <View>
@@ -77,6 +104,7 @@ export const PhotoPage = (props: PhotoPageProps) => {
                     }
                 </View>
             }
+
         </View>
     )
 }
