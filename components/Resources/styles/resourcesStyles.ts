@@ -64,5 +64,10 @@ export const resourcesStyles = StyleSheet.create({
         borderRadius: 5,
         alignItems: "center",
         justifyContent: "center"
+    },
+    noDataView:{
+        flex:1,
+        alignItems:"center",
+        justifyContent:"center",
     }
 })

@@ -7,6 +7,7 @@ import CalendarScreen from "@/components/Calendar/calendarScreen";
 import {useThemeStyles} from "@/hooks/themeHook";
 import {PhotoPage} from "@/components/Photo/photoPage";
 import {useQuery} from "@tanstack/react-query";
+import {LoadingScreen} from "@/components/Loading/loadingScreen";
 
 export default function Apod() {
     const [isCalendarVisible, setCalendarVisible] = useState<boolean>(false);
@@ -20,7 +21,7 @@ export default function Apod() {
     })
 
     if (isPending) {
-        return <Text>Loading...</Text>
+        return <LoadingScreen/>
     }
 
     if (isError) {

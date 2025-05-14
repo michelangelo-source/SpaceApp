@@ -3,4 +3,5 @@ export const resourcesText ={
     submitBtn:"Submit",
     nextPage:"Next",
     previousPage:"Prev",
+    notFoundPage:"No Data Found",
 }

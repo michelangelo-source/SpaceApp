@@ -8,6 +8,7 @@ import {MarsTexts} from "@/components/MarsRoverPhotos/texts/MarsTexts";
 import {useThemeStyles} from "@/hooks/themeHook";
 import {useQuery} from "@tanstack/react-query";
 import {Gallery} from "@/components/Gallery/gallery";
+import {LoadingScreen} from "@/components/Loading/loadingScreen";
 
 
 export default function Mars() {
@@ -51,7 +52,7 @@ export default function Mars() {
     }, [manifest]);
 
     if (isManifestPending || isPhotosPending) {
-        return <Text>Loading...</Text>
+        return <LoadingScreen/>
     }
     if (isManifestError) {
         return <Text>Error: {manifestError.message}</Text>
