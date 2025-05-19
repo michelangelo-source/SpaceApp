@@ -16,6 +16,7 @@ export default function Mars() {
     const [currentDate, setCurrentDate] = useState<string>("");
     const [disabledDates, setDisabledDates] = useState<string[]>();
     const themeStyles = useThemeStyles()
+    const [date, setDate] = useState<Date>(new Date());
 
     const disableDates = (enabledDates: string[]) => {
         const toStr = (date: Date) => date.toISOString().slice(0, 10);
@@ -36,12 +37,22 @@ export default function Mars() {
         queryFn: getManifest,
     })
 
-    const {isPending: isPhotosPending, isError: isPhotosError, data: currPhotos, error: photosError} = useQuery({
-        queryKey: ['photos', currentDate],
+    const {
+        isPending: isPhotosPending,
+        isError: isPhotosError,
+        data: currPhotos,
+        error: photosError
+    } = useQuery({
+        queryKey: ['photos', currentDate, date],
         queryFn: () => getPhotosByEarthDate(currentDate),
         enabled: !!currentDate,
-    })
 
+    })
+    useEffect(() => {
+        if (currentDate !== "") {
+            setDate(new Date());
+        }
+    }, [currentDate]);
 
     useEffect(() => {
         if (manifest) {
