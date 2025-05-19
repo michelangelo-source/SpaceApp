@@ -4,13 +4,6 @@ export const indexStyles = StyleSheet.create({
     container: {
         flex: 1,
     },
-    image: {
-        width: "100%",
-        flex: 1,
-        alignItems: "center",
-        justifyContent: 'center',
-    },
-
     menuElemLLink:{
         margin:10,
         width:"80%",

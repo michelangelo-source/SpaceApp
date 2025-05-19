@@ -6,18 +6,20 @@ const windowHeight = Dimensions.get('window').height;
 export const darkThemeColor = "#222222"
 export const darkThemeChildContainer = "#333333"
 export const darkThemeThirdColor = "#111111"
+export const darkTextColor = "white"
 
-export const lightThemeColor = "#A9D7F5"
-export const lightThemeChildContainer = "#EDEDED"
+export const lightThemeColor = "#f4f4f4"
+export const lightThemeChildContainer = "#ffffff"
 export const lightThemeThirdColor = "#6e9cbd"
+export const lightTextColor = "#2C3E50"
 
 export const globalStyles = StyleSheet.create({
 
     lightText: {
-        color: "#2C3E50"
+        color: lightTextColor
     },
     darkText: {
-        color: "white"
+        color:darkTextColor
     },
     lightContainer: {
         backgroundColor: lightThemeColor
@@ -44,6 +46,12 @@ export const globalStyles = StyleSheet.create({
     },
     photoListStyle: {
         width: "100%",
+    },
+    backgroundImage: {
+        width: "100%",
+        flex: 1,
+        alignItems: "center",
+        justifyContent: 'center',
     },
     photoViewPortrait: {
         width: windowWidth / 3,
