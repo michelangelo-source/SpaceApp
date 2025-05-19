@@ -37,7 +37,7 @@ export default function Mars() {
     })
 
     const {isPending: isPhotosPending, isError: isPhotosError, data: currPhotos, error: photosError} = useQuery({
-        queryKey: ['photos',currentDate],
+        queryKey: ['photos', currentDate],
         queryFn: () => getPhotosByEarthDate(currentDate),
         enabled: !!currentDate,
     })
@@ -62,26 +62,24 @@ export default function Mars() {
     }
 
     return (<View style={[themeStyles.containerTheme, marsStyles.container]}>
-        <>
-            <Text style={[themeStyles.textTheme, marsStyles.title]}>{MarsTexts.title}</Text>
-            <TouchableOpacity onPress={() => {
-                setCalendarVisible(true)
-            }}
-                              style={[themeStyles.childContainerTheme, marsStyles.dateBtn]}
-            >
-                <Text style={[themeStyles.textTheme]}>
-                    {currentDate}
-                </Text>
-            </TouchableOpacity>
+        <Text style={[themeStyles.textTheme, marsStyles.title]}>{MarsTexts.title}</Text>
+        <TouchableOpacity onPress={() => {
+            setCalendarVisible(true)
+        }}
+                          style={[themeStyles.childContainerTheme, marsStyles.dateBtn]}
+        >
+            <Text style={[themeStyles.textTheme]}>
+                {currentDate}
+            </Text>
+        </TouchableOpacity>
 
 
-          <Gallery photos={currPhotos.photos} showDate={false} showDescription={false}/>
+        <Gallery photos={currPhotos.photos} showDate={false} showDescription={false}/>
 
-            {isCalendarVisible &&
-                <CalendarScreen Day={currentDate} closeScreen={setCalendarVisible} returnDate={setCurrentDate}
-                                disabledDates={disabledDates} maxDate={new Date(manifest.photo_manifest.max_date)}
-                                minDate={new Date(manifest.photo_manifest.photos[0].earth_date)}/>}
-        </>
+        {isCalendarVisible &&
+            <CalendarScreen Day={currentDate} closeScreen={setCalendarVisible} returnDate={setCurrentDate}
+                            disabledDates={disabledDates} maxDate={new Date(manifest.photo_manifest.max_date)}
+                            minDate={new Date(manifest.photo_manifest.photos[0].earth_date)}/>}
 
 
     </View>)

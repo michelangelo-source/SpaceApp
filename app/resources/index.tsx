@@ -76,13 +76,13 @@ export default function Resources() {
                 </Text>
             </View>
             <View style={[resourcesStyles.formView]}>
-                <View style={[themeStyles.childContainerTheme, resourcesStyles.textInputView]}>
+                <View style={[themeStyles.border,themeStyles.childContainerTheme, resourcesStyles.textInputView]}>
                     <TextInput onSubmitEditing={submitForm} onChangeText={(query) => {
                         queryRef.current = query
                     }} placeholder={"Search..."} style={[themeStyles.textTheme]}/>
                 </View>
                 <TouchableOpacity style={resourcesStyles.submitTouchable} onPress={submitForm}>
-                    <View style={[themeStyles.thirdColor, resourcesStyles.submitView]}>
+                    <View style={[themeStyles.border,themeStyles.thirdColor, resourcesStyles.submitView]}>
                         <Text
                             style={[themeStyles.textTheme]}>{resourcesText.submitBtn}</Text>
                     </View>
@@ -119,7 +119,7 @@ export default function Resources() {
                                     &&
                                     <TouchableOpacity style={[resourcesStyles.nextTouchable]}
                                                       onPress={nextPage}>
-                                        <View style={[themeStyles.childContainerTheme, resourcesStyles.nextButton]}>
+                                        <View style={[themeStyles.border,themeStyles.childContainerTheme, resourcesStyles.nextButton]}>
                                             <Text style={[themeStyles.textTheme]}>{resourcesText.nextPage}</Text>
                                         </View>
                                     </TouchableOpacity>

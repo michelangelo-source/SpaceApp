@@ -33,37 +33,29 @@ export default function Apod() {
             <ScrollView style={APODstyles.scrollView}>
                 <View style={APODstyles.titleView}>
                     <Text style={[themeStyles.textTheme, APODstyles.titleText]}>{APODTexts.title}</Text>
-                    <TouchableOpacity style={[themeStyles.childContainerTheme, APODstyles.chosenDate]} onPress={() => {
-                        setCalendarVisible(true)
-                    }}>
+                    <TouchableOpacity
+                        style={[themeStyles.childContainerTheme, APODstyles.chosenDate]}
+                        onPress={() => {
+                            setCalendarVisible(true)
+                        }}>
                         <Text style={themeStyles.textTheme}>{APODDay}</Text>
                     </TouchableOpacity>
                 </View>
+                <Text style={themeStyles.textTheme}>
+                    {data.title}
+                </Text>
                 {data.media_type === "image" ?
-                    <>
-                        <Text style={themeStyles.textTheme}>
-                            {data.title}
-                        </Text>
-
-                        <TouchableOpacity onPress={() => {
-                            setBigPictureVisible(true)
-                        }}>
-                            <Image
-                                style={APODstyles.pictureOfTheDay}
-                                resizeMode={"cover"}
-                                source={{
-                                    uri: data.url,
-                                }}
-                            />
-                        </TouchableOpacity>
-                        {data.copyright && <Text
-                            style={[themeStyles.textTheme, APODstyles.credentialsText]}>Credentials: {data.copyright}</Text>}
-                        <View style={[themeStyles.childContainerTheme, APODstyles.pictureExplanationView]}>
-                            <Text style={[themeStyles.textTheme, APODstyles.pictureExplanation]}>
-                                {data.explanation}
-                            </Text>
-                        </View>
-                    </>
+                    <TouchableOpacity onPress={() => {
+                        setBigPictureVisible(true)
+                    }}>
+                        <Image
+                            style={APODstyles.pictureOfTheDay}
+                            resizeMode={"cover"}
+                            source={{
+                                uri: data.url,
+                            }}
+                        />
+                    </TouchableOpacity>
                     :
                     <Text style={themeStyles.textTheme}>{APODTexts.wrongFormat}{"\n"}
                         <Text style={APODstyles.wrongFormatLink} onPress={() => {
@@ -71,8 +63,14 @@ export default function Apod() {
                         }}>{data.url}</Text>
                     </Text>
                 }
-
-
+                {data.copyright &&
+                    <Text
+                    style={[themeStyles.textTheme, APODstyles.credentialsText]}>Credentials: {data.copyright}</Text>}
+                <View style={[themeStyles.border,themeStyles.childContainerTheme, APODstyles.pictureExplanationView]}>
+                    <Text style={[themeStyles.textTheme, APODstyles.pictureExplanation]}>
+                        {data.explanation}
+                    </Text>
+                </View>
             </ScrollView>
             {isCalendarVisible &&
                 <CalendarScreen Day={APODDay} returnDate={setAPODDay} closeScreen={setCalendarVisible}

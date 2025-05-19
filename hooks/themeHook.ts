@@ -3,22 +3,23 @@ import {globalStyles} from "@/globalStyles/globalStyles";
 
 export const useThemeStyles=()=>{
     const colorScheme = useColorScheme();
-
-    const themeBackgroundImage =
-        colorScheme === 'light' ? require('@/assets/images/lightBackground.png') : require('@/assets/images/darkBackgorund.png')
-    const themeTextStyle =
-        colorScheme === 'light' ? globalStyles.lightText : globalStyles.darkText;
-    const themeContainerStyle =
-        colorScheme === 'light' ? globalStyles.lightContainer : globalStyles.darkContainer;
-    const themeChildContainerStyle =
-        colorScheme === 'light' ? globalStyles.childColorLight : globalStyles.childColorDark;
-    const themeThirdColor =
-        colorScheme === 'light' ? globalStyles.thirdLightThemeColor : globalStyles.thirdDarkThemeColor
-    return{
-        textTheme:themeTextStyle,
-        containerTheme:themeContainerStyle,
-        childContainerTheme:themeChildContainerStyle,
-        backgroundImage:themeBackgroundImage,
-        thirdColor:themeThirdColor,
+    if(colorScheme==='light'){
+        return{
+            textTheme:globalStyles.lightText,
+            containerTheme:globalStyles.lightContainer,
+            childContainerTheme:globalStyles.childColorLight,
+            backgroundImage:require('@/assets/images/lightBackground.png'),
+            thirdColor:globalStyles.thirdLightThemeColor,
+            border:globalStyles.borderLight,
+        }
+    }else {
+        return{
+            textTheme:globalStyles.darkText,
+            containerTheme:globalStyles.darkContainer,
+            childContainerTheme:globalStyles.childColorDark,
+            backgroundImage:require('@/assets/images/darkBackgorund.png'),
+            thirdColor:globalStyles.thirdDarkThemeColor,
+            border:globalStyles.borderDark,
+        }
     }
 };

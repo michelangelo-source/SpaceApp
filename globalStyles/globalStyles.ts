@@ -12,7 +12,6 @@ export const lightThemeColor = "#f4f4f4"
 export const lightThemeChildContainer = "#ffffff"
 export const lightThemeThirdColor = "#6e9cbd"
 export const lightTextColor = "#2C3E50"
-
 export const globalStyles = StyleSheet.create({
 
     lightText: {
@@ -70,5 +69,15 @@ export const globalStyles = StyleSheet.create({
     photoImgLandscape: {
         width: windowHeight / 6 - 10,
         height: windowHeight / 6 - 10,
+    },
+    borderLight:{
+        borderWidth: 1,
+        borderColor:lightThemeThirdColor,
+        borderStyle:"solid"
+    },
+    borderDark:{
+        borderWidth: 1,
+        borderColor:darkThemeThirdColor,
+        borderStyle:"solid"
     }
 })

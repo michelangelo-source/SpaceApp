@@ -13,6 +13,7 @@ export const resourcesStyles = StyleSheet.create({
         fontSize: 20
     },
     formView: {
+        borderRadius: 20,
         flexDirection: 'row',
         marginBottom: 20,
         height: 50,
